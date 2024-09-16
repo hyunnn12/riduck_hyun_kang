@@ -1,21 +1,42 @@
-// XML파일들을 파싱하는 함수 컴포넌트
 import { XMLParser } from 'fast-xml-parser';
 
 export const parseXML = (xmlData) => {
-    const parser = new XMLParser();
+    const parser = new XMLParser({
+        ignoreAttributes: false,  // 속성을 파싱할 수 있도록 설정
+        attributeNamePrefix: "",  // 속성 앞에 붙는 @_를 제거
+    });
     const jsonObj = parser.parse(xmlData);
-    
-    // 필요한 데이터 추출
 
-    // XML의 workout 태그 안의 정보를 추출
+    // 워크아웃 단계 추출
     const workout = jsonObj.workout_file.workout;
+    let stages = [];
+
+    // 단계별로 파싱
+    for (const key in workout) {
+        if (Array.isArray(workout[key])) {
+            // 각 단계가 배열인 경우
+            workout[key].forEach((stage) => {
+                stages.push({
+                    name: key,
+                    ...stage // 모든 속성 추가
+                });
+            });
+        } else if (typeof workout[key] === 'object') {
+            // 단일 객체로 존재하는 경우
+            stages.push({
+                name: key,
+                ...workout[key] // 모든 속성 추가
+            });
+        }
+    }
+
+    // 콘솔에 파싱된 데이터 출력
+    console.log('Parsed stages:', stages);
+
     const workoutDetails = {
-        // name 태그의 값 추출
         name: jsonObj.workout_file.name,
-        // description 태그의 값 추출
         description: jsonObj.workout_file.description,
-        // workout 단계 추출
-        stages: workout
+        stages: stages
     };
     
     return workoutDetails;

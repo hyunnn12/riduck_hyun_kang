@@ -1,0 +1,15 @@
+<workout_file>
+    <author>Riduck</author>
+    <name>베이스 훈련</name>
+    <category>BASE</category>
+    <description>기본 체력과 지구력을 기르기 위한 베이스 훈련입니다</description>
+    <sportType>bike</sportType>
+    <workout>
+        <Warmup Duration="240" PowerLow="0.32" PowerHigh="0.60"/>
+        <SteadyState Duration="60" Power="0.60"/>
+        <SteadyState Duration="60" Power="0.70"/>
+        <SteadyState Duration="60" Power="0.50"/>
+        <IntervalsT Repeat="12" OnDuration="120" OffDuration="120" OnPower="0.72" OffPower="0.56"/>
+        <Cooldown Duration="300" PowerHigh="0.50" PowerLow="0.32"/>
+    </workout>
+</workout_file>

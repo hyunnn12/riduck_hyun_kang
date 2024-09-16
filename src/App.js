@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import WorkoutCard from './components/WorkoutCard';
+import { parseXML } from './utils/xmlParser';
+import './styles/App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [workoutData, setWorkoutData] = useState(null);
+
+    const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+            const xmlData = e.target.result;
+            const parsedData = parseXML(xmlData);
+            setWorkoutData(parsedData);
+        };
+        
+        reader.readAsText(file);
+    };
+
+    return (
+        <div className="App">
+            <h1>Workout Visualizer</h1>
+            <input type="file" accept=".xml" onChange={handleFileUpload} />
+            {workoutData && <WorkoutCard workout={workoutData} />}
+        </div>
+    );
 }
 
 export default App;

@@ -1,0 +1,21 @@
+<workout_file>
+    <author>Riduck</author>
+    <name>역치 훈련</name>
+    <category>Threshold</category>
+    <description>운동 역치를 향상시키기 위한 고강도 훈련입니다</description>
+    <sportType>bike</sportType>
+    <workout>
+        <Warmup Duration="120" PowerLow="0.32" PowerHigh="0.39"/>
+        <SteadyState Duration="60" Power="0.39"/>
+        <SteadyState Duration="60" Power="0.47"/>
+        <SteadyState Duration="60" Power="0.55"/>
+        <SteadyState Duration="60" Power="0.63"/>
+        <IntervalsT Repeat="2" OnDuration="30" OffDuration="30" OnPower="1.00" OffPower="0.62"/>
+        <SteadyState Duration="120" Power="0.5"/>
+        <SteadyState Duration="1200" Power="0.96"/>
+        <SteadyState Duration="600" Power="0.44"/>
+        <SteadyState Duration="1200" Power="0.96"/>
+        <SteadyState Duration="300" Power="0.44"/>
+        <Cooldown Duration="300" PowerHigh="0.44" PowerLow="0.32"/>
+    </workout>
+</workout_file>

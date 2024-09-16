@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+.workout-card {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 8px;
+}
+
+.workout-duration {
+  margin-top: 10px;
+  font-weight: bold;
+}
