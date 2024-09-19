@@ -13,7 +13,7 @@ function App() {
         
         reader.onload = (e) => {
             const xmlData = e.target.result;
-            // utils.xmlParse.js-> XML 문자열을 JavaScript 객체로 변환
+            // utils/xmlParse.js-> XML 문자열을 JavaScript 객체로 변환
             const parsedData = parseXML(xmlData);
             setWorkoutData(parsedData);
         };

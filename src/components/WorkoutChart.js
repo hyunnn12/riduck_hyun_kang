@@ -1,13 +1,16 @@
 import React from 'react';
+import { Box, Paper, Typography, IconButton, Button } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { CanvasJSChart } from 'canvasjs-react-charts';
 
-const WorkoutChart = ({ stages }) => {
+const WorkoutChart = ({ stages, workoutName, description }) => {
     const FTP = 250;
     const dataSeries = [];
     let currentTime = 0;
-    let totalDuration = 0; // 총 운동 시간을 저장할 변수
+    let totalDuration = 0;
 
-    // 각 워크아웃 단계를 순회하며 차트의 데이터 시리즈를 생성
+    // 차트 데이터 생성 (이전과 동일)
     stages.forEach((stage) => {
         const { Duration, PowerLow, PowerHigh, Power, OnPower, OffPower, OnDuration, OffDuration, Repeat, name } = stage;
         const dataPoints = [];
@@ -24,7 +27,7 @@ const WorkoutChart = ({ stages }) => {
                 dataPoints.push({ x: currentTime + i, y: power });
             }
             currentTime += duration;
-            totalDuration += duration; // 총 시간 누적
+            totalDuration += duration;
         } else if (name === 'SteadyState') {
             label = 'SteadyState';
             const power = FTP * Power;
@@ -34,25 +37,23 @@ const WorkoutChart = ({ stages }) => {
                 dataPoints.push({ x: currentTime + i, y: power });
             }
             currentTime += duration;
-            totalDuration += duration; // 총 시간 누적
+            totalDuration += duration;
         } else if (name === 'IntervalsT') {
             label = 'IntervalsT';
             for (let repeat = 0; repeat < Repeat; repeat++) {
-                // On interval
                 const onDuration = parseInt(OnDuration);
                 for (let i = 0; i <= onDuration; i += 10) {
                     dataPoints.push({ x: currentTime + i, y: FTP * OnPower });
                 }
                 currentTime += onDuration;
-                totalDuration += onDuration; // 총 시간 누적
+                totalDuration += onDuration;
 
-                // Off interval
                 const offDuration = parseInt(OffDuration);
                 for (let i = 0; i <= offDuration; i += 10) {
                     dataPoints.push({ x: currentTime + i, y: FTP * OffPower });
                 }
                 currentTime += offDuration;
-                totalDuration += offDuration; // 총 시간 누적
+                totalDuration += offDuration;
             }
         } else if (name === 'Cooldown') {
             label = 'Cooldown';
@@ -65,10 +66,9 @@ const WorkoutChart = ({ stages }) => {
                 dataPoints.push({ x: currentTime + i, y: power });
             }
             currentTime += duration;
-            totalDuration += duration; // 총 시간 누적
+            totalDuration += duration;
         }
 
-        // 각 파워 존에 따라 색상 결정
         const getZoneColor = (power) => {
             if (power < 0.4 * FTP) return '#BEBECA';
             if (power < 0.6 * FTP) return '#54AFFE';
@@ -94,36 +94,64 @@ const WorkoutChart = ({ stages }) => {
     });
 
     const options = {
-        theme: "light2",
-        toolTip: {
-            shared: false,
-            enabled: true
-        },
-        legend: {
-            cursor: "pointer",
-            itemclick: (e) => {
-                if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                    e.dataSeries.visible = false;
-                } else {
-                    e.dataSeries.visible = true;
-                }
-                e.chart.render();
+    theme: "light2",
+    toolTip: {
+        shared: false,
+        enabled: true,
+    },
+    legend: {
+        cursor: "pointer",
+        horizontalAlign: "center",
+        verticalAlign: "bottom",
+        maxWidth: 600, // 범례의 최대 너비 설정
+        itemWrap: true, // 긴 범례 항목이 줄 바꿈되도록 설정
+        maxHeight: 50, // 범례 영역의 최대 높이 설정
+        itemclick: (e) => {
+            if (typeof e.dataSeries.visible === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else {
+                e.dataSeries.visible = true;
             }
+            e.chart.render();
         },
-        data: dataSeries
-    };
+        fontSize: 12, // 범례 폰트 크기 조정
+        fontFamily: "Arial",
+    },
+    data: dataSeries,
+};
 
-    // 총 운동 시간 계산 (초 -> 분 변환)
+
+
     const totalTimeMinutes = Math.round(totalDuration / 60);
 
     return (
-        <div className="workout-chart">
+        <Paper elevation={3} sx={{ padding: 3, margin: '20px auto', maxWidth: '80%', width: '100%' }}>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="h5">{workoutName}</Typography>
+                <IconButton>
+                    <DownloadIcon />
+                </IconButton>
+            </Box>
+
+            <Typography variant="body1" color="textSecondary" sx={{ marginY: 2 }}>
+                {description}
+            </Typography>
+
             <CanvasJSChart options={options} />
-            {/* 총 운동 시간을 표시하는 부분 */}
-            <div className="total-time" style={{ textAlign: 'center', marginTop: '20px' }}>
-                <i className="icon-clock">⏰</i> {totalTimeMinutes} 분
-            </div>
-        </div>
+
+            {/* 아래 부분: 시간과 '다음' 버튼 */}
+            <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ marginTop: 2 }}>
+                {/* 왼쪽에 시간 표시 */}
+                <Box display="flex" alignItems="center">
+                    <AccessTimeIcon sx={{ marginRight: 1 }} />
+                    <Typography variant="h6">{totalTimeMinutes} 분</Typography>
+                </Box>
+                {/* 오른쪽에 '다음' 버튼 */}
+                <Button variant="contained" color="primary">
+                    다음
+                </Button>
+            </Box>
+        </Paper>
     );
 };
 
