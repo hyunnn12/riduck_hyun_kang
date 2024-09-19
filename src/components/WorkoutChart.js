@@ -1,3 +1,4 @@
+// workout 단계의 데이터를 기반으로 차트 생성
 import React from 'react';
 import { CanvasJSChart } from 'canvasjs-react-charts';
 
@@ -17,6 +18,7 @@ const WorkoutCard = ({ stages, workoutName, description }) => {
             const endPower = FTP * PowerHigh;
             const duration = parseInt(Duration);
 
+            // 10초 간격으로 데이터 포인트 생성
             for (let i = 0; i <= duration; i += 10) {
                 const power = startPower + ((endPower - startPower) * (i / duration));
                 dataPoints.push({ x: currentTime + i, y: power });
@@ -34,7 +36,7 @@ const WorkoutCard = ({ stages, workoutName, description }) => {
             totalDuration += duration;
         } else if (name === 'IntervalsT') {
             for (let repeat = 0; repeat < Repeat; repeat++) {
-                // On interval
+                // interval 시작
                 const onDuration = parseInt(OnDuration);
                 for (let i = 0; i <= onDuration; i += 10) {
                     dataPoints.push({ x: currentTime + i, y: FTP * OnPower });
@@ -42,7 +44,7 @@ const WorkoutCard = ({ stages, workoutName, description }) => {
                 currentTime += onDuration;
                 totalDuration += onDuration;
 
-                // Off interval
+                // interval 끝
                 const offDuration = parseInt(OffDuration);
                 for (let i = 0; i <= offDuration; i += 10) {
                     dataPoints.push({ x: currentTime + i, y: FTP * OffPower });
@@ -100,29 +102,28 @@ const WorkoutCard = ({ stages, workoutName, description }) => {
     };
 
     return (
-        <div className="workout-card" style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '10px', maxWidth: '600px', margin: '20px auto' }}>
-            {/* 카드 상단: 제목 및 아이콘 */}
-            <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2>{workoutName}</h2>
-                <i className="icon-download" style={{ cursor: 'pointer' }}>📥</i> {/* 다운로드 아이콘 */}
-            </div>
+    <div className="workout-card" style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '10px', maxWidth: '600px', margin: '20px auto' }}>
+        {/* 카드 상단: 제목 및 아이콘 */}
+        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2>{workoutName}</h2>
+            <i className="icon-download" style={{ cursor: 'pointer' }}>📥</i> {/* 다운로드 아이콘 */}
+        </div>
 
-            {/* 설명 부분 */}
-            <p>{description}</p>
+        {/* 설명 부분 */}
+        <p>{description}</p>
 
-            {/* 차트 부분 */}
-            <CanvasJSChart options={options} />
+        {/* 차트 부분 */}
+        <CanvasJSChart options={options} />
 
-            {/* 카드 하단: 총 운동 시간 및 버튼 */}
-            <div className="card-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
-                <div className="total-time">
-                    <i className="icon-clock">⏰</i> {/* 시간 아이콘 */}
-                    <span>{totalTimeMinutes} 분</span>
-                </div>
-                <button className="next-button">다음</button> {/* 다음 버튼 */}
+        {/* 카드 하단: 총 운동 시간 부분 */}
+        <div className="card-footer" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}>
+            <div className="total-time">
+                <i className="icon-clock">⏰</i> {/* 시간 아이콘 */}
+                <span>{totalTimeMinutes} 분</span>
             </div>
         </div>
-    );
+    </div>
+);
 };
 
 export default WorkoutCard;
