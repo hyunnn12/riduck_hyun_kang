@@ -13,32 +13,54 @@ const WorkoutCard = ({ stages, workoutName, description }) => {
         const dataPoints = [];
 
         if (name === 'Warmup') {
-            dataPoints.push({ x: currentTime, y: FTP * PowerLow });
-            currentTime += parseInt(Duration);
-            dataPoints.push({ x: currentTime, y: FTP * PowerHigh });
-            totalDuration += parseInt(Duration); // 총 운동 시간 추가
+            const startPower = FTP * PowerLow;
+            const endPower = FTP * PowerHigh;
+            const duration = parseInt(Duration);
+
+            for (let i = 0; i <= duration; i += 10) {
+                const power = startPower + ((endPower - startPower) * (i / duration));
+                dataPoints.push({ x: currentTime + i, y: power });
+            }
+            currentTime += duration;
+            totalDuration += duration;
         } else if (name === 'SteadyState') {
-            dataPoints.push({ x: currentTime, y: FTP * Power });
-            currentTime += parseInt(Duration);
-            dataPoints.push({ x: currentTime, y: FTP * Power });
-            totalDuration += parseInt(Duration); // 총 운동 시간 추가
+            const power = FTP * Power;
+            const duration = parseInt(Duration);
+
+            for (let i = 0; i <= duration; i += 10) {
+                dataPoints.push({ x: currentTime + i, y: power });
+            }
+            currentTime += duration;
+            totalDuration += duration;
         } else if (name === 'IntervalsT') {
-            for (let i = 0; i < Repeat; i++) {
+            for (let repeat = 0; repeat < Repeat; repeat++) {
                 // On interval
-                dataPoints.push({ x: currentTime, y: FTP * OnPower });
-                currentTime += parseInt(OnDuration);
-                totalDuration += parseInt(OnDuration); // 총 운동 시간 추가
+                const onDuration = parseInt(OnDuration);
+                for (let i = 0; i <= onDuration; i += 10) {
+                    dataPoints.push({ x: currentTime + i, y: FTP * OnPower });
+                }
+                currentTime += onDuration;
+                totalDuration += onDuration;
 
                 // Off interval
-                dataPoints.push({ x: currentTime, y: FTP * OffPower });
-                currentTime += parseInt(OffDuration);
-                totalDuration += parseInt(OffDuration); // 총 운동 시간 추가
+                const offDuration = parseInt(OffDuration);
+                for (let i = 0; i <= offDuration; i += 10) {
+                    dataPoints.push({ x: currentTime + i, y: FTP * OffPower });
+                }
+                currentTime += offDuration;
+                totalDuration += offDuration;
             }
         } else if (name === 'Cooldown') {
-            dataPoints.push({ x: currentTime, y: FTP * PowerHigh });
-            currentTime += parseInt(Duration);
-            dataPoints.push({ x: currentTime, y: FTP * PowerLow });
-            totalDuration += parseInt(Duration); // 총 운동 시간 추가
+            const startPower = FTP * PowerHigh;
+            const endPower = FTP * PowerLow;
+            const duration = parseInt(Duration);
+
+            for (let i = 0; i <= duration; i += 10) {
+                const power = startPower + ((endPower - startPower) * (i / duration));
+                dataPoints.push({ x: currentTime + i, y: power });
+            }
+            currentTime += duration;
+            totalDuration += duration;
         }
 
         // 각 파워 존에 따라 색상 결정
@@ -56,7 +78,12 @@ const WorkoutCard = ({ stages, workoutName, description }) => {
             type: "area",
             dataPoints: dataPoints,
             color: zoneColor,
-            fillOpacity: 0.5 // 그래프의 투명도 설정
+            fillOpacity: 0.5, // 그래프의 투명도 설정
+            markerType: "circle", // 마커(점) 모양 설정
+            markerSize: 0, // 기본 상태에서는 점을 숨김
+            markerColor: zoneColor, // 마커 색상 설정
+            highlightEnabled: true, // 선 강조 설정
+            toolTipContent: "{x}: {y}" // 툴팁 내용 지정
         });
     });
 
@@ -65,6 +92,10 @@ const WorkoutCard = ({ stages, workoutName, description }) => {
 
     const options = {
         theme: "light2",
+        toolTip: {
+            shared: false, // 선 위에서만 툴팁이 나타나도록 설정
+            enabled: true // 툴팁을 활성화
+        },
         data: dataSeries
     };
 
@@ -95,4 +126,3 @@ const WorkoutCard = ({ stages, workoutName, description }) => {
 };
 
 export default WorkoutCard;
-    
