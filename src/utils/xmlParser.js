@@ -1,3 +1,4 @@
+//XML 파일을 JavaScript 객체로 변환하여 필요한 데이터를 추출
 import { XMLParser } from 'fast-xml-parser';
 
 export const parseXML = (xmlData) => {
