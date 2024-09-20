@@ -146,8 +146,10 @@ const WorkoutChart = ({ stages, workoutName, description }) => {
     });
   });
 
+  // zoomEnabled 속성을 추가
   const options = {
     theme: "light2",
+    zoomEnabled: true, // 확대/축소 기능 활성화
     toolTip: {
       shared: false,
       enabled: true,
@@ -160,6 +162,16 @@ const WorkoutChart = ({ stages, workoutName, description }) => {
   return (
     <Card sx={{ maxWidth: "80%", margin: "0 auto", boxShadow: 3 }}>
       <CardContent>
+        {/* 확대/축소 안내 문구 추가 */}
+        <Typography
+          variant="subtitle1"
+          color="textSecondary"
+          align="center"
+          sx={{ marginBottom: 2 }}
+        >
+          확대하고 싶은 곳을 마우스로 드래그하여 확대할 수 있습니다.
+        </Typography>
+
         <Box
           display="flex"
           justifyContent="space-between"
