@@ -28,17 +28,17 @@ function App() {
 
   // 파일 업로드
   const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    // 콜백함수로 /utils/xmlParser의 parseXML을 사용해 XML 데이터를 파싱
-    reader.onload = (e) => {
-      const xmlData = e.target.result;
-      const parsedData = parseXML(xmlData);
-      setWorkoutData(parsedData);
-    };
-
-    reader.readAsText(file);
+    const file = event.target.files[0]; // 파일 선택 확인
+    // 파일이 존재하는지 확인
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const xmlData = e.target.result;
+        const parsedData = parseXML(xmlData); // XML 파싱
+        setWorkoutData(parsedData);
+      };
+      reader.readAsText(file); // 텍스트 형식으로 파일 읽기
+    }
   };
 
   return (
