@@ -14,7 +14,7 @@ import {
 import DownloadIcon from "@mui/icons-material/Download";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { CanvasJSChart } from "canvasjs-react-charts";
-import { useSpring, animated } from "@react-spring/web"; // react-spring import
+import { useSpring, animated } from "@react-spring/web";
 
 const WorkoutChart = ({ stages, workoutName, description }) => {
   const [open, setOpen] = useState(false); // 다운로드 알림창의 열림/닫힘 상태 관리
