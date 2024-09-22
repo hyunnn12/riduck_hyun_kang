@@ -1,5 +1,4 @@
-// workout의 데이터를 받아 차트로 만들어주는 컴포넌트
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -15,14 +14,24 @@ import {
 import DownloadIcon from "@mui/icons-material/Download";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { CanvasJSChart } from "canvasjs-react-charts";
+import { useSpring, animated } from "@react-spring/web"; // react-spring import
 
 const WorkoutChart = ({ stages, workoutName, description }) => {
   const [open, setOpen] = useState(false); // 다운로드 알림창의 열림/닫힘 상태 관리
   const [nextOpen, setNextOpen] = useState(false); // 다음 알림창의 열림/닫힘 상태 관리
+  const [animateTrigger, setAnimateTrigger] = useState(false); // 애니메이션 트리거를 위한 상태 관리
   const FTP = 250;
   const dataSeries = [];
   let currentTime = 0;
   let totalDuration = 0;
+
+  // 애니메이션 설정, reset을 true로 설정
+  const animationProps = useSpring({
+    from: { transform: "translateY(100px)", opacity: 0 },
+    to: { transform: "translateY(0)", opacity: 1 },
+    config: { duration: 1000 },
+    reset: animateTrigger, // 상태가 변경되면 애니메이션 리셋
+  });
 
   // workout 단계의 이름이 10자가 넘어가면 나머지는 ...로 대체
   const truncateLabel = (label) => {
@@ -159,10 +168,14 @@ const WorkoutChart = ({ stages, workoutName, description }) => {
 
   const totalTimeMinutes = Math.round(totalDuration / 60);
 
+  // XML 파일 업로드 시 애니메이션을 트리거하는 효과를 적용
+  useEffect(() => {
+    setAnimateTrigger(true);
+  }, [stages]); // stages가 변경될 때마다 애니메이션을 트리거
+
   return (
     <Card sx={{ maxWidth: "80%", margin: "0 auto", boxShadow: 3 }}>
       <CardContent>
-        {/* 확대/축소 안내 문구 추가 */}
         <Typography
           variant="subtitle1"
           color="textSecondary"
@@ -194,7 +207,10 @@ const WorkoutChart = ({ stages, workoutName, description }) => {
           {description}
         </Typography>
 
-        <CanvasJSChart options={options} />
+        {/* 애니메이션 적용 부분 */}
+        <animated.div style={animationProps}>
+          <CanvasJSChart options={options} />
+        </animated.div>
       </CardContent>
 
       <CardActions sx={{ justifyContent: "space-between", padding: 2 }}>
