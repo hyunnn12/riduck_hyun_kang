@@ -5,9 +5,11 @@ import { XMLParser } from "fast-xml-parser";
 export const parseXML = (xmlData) => {
   // XMLParser를 이용하여 XML을 JavaScript 객체로 변환
   const parser = new XMLParser({
-    ignoreAttributes: false, // 속성을 파싱할 수 있도록 설정
-    attributeNamePrefix: "", // 속성 앞에 붙는 @_를 제거
+    ignoreAttributes: false,
+    attributeNamePrefix: "",
+    preserveOrder: true, // XML 노드의 순서를 유지하도록 설정
   });
+
   // JavaScript 객체로 변환한 값을 jsonObj에 저장
   const jsonObj = parser.parse(xmlData);
 
